@@ -221,31 +221,211 @@ En la carpeta resources existen ficheros multimedia como imágenes o canciones, 
 
 ## Recomendaciones de desarrollo.
 
-### Parte 1.
+### Parte 1. (4 puntos)
 En la clase nivel:
  - Crear el avión a partir de la clase SpriteMove y moverlo por la pantalla.
  - Crear un enemigo y que se mueva por la pantalla (hacer abstracto y heredar de este, en el futuro se necesita más enemigos).
  - Crear una bala y que el avión dispare esa bala.
- - Definir una estructura que gestione las balas del avión.
+ - Definir una estructura que gestione las balas del avión. 
  - Definir en el enemigo una estructura para gestionar las balas y hacer que se generen de forma aleatoria.
  - Establecer la estructura necesaria para tener un conjunto de enemigos y gestionarlo (por ejemplo cuando salen de la pantalla borrarlos).
 Implementar lo necesario para que se produzcan colisiones entre las balas del avión y los enemigos (desapareciendo ambos e incrementándose el contador).
  - Hacer que las balas del enemigo puedan colisionar con el avión, descontando vidas.
 
-### Parte 2.
+### Parte 2. (2 puntos)
 
  - Crear al menos 3 niveles en el juego, cada vez que se termine el nivel pasará al siguiente.
  - Establecer en la clase Game la estructura para soportar diferentes escenas.
  - Crear al menos las escenas de Intro, GameScene(ya se tiene), EndGame y PlayerScore.
  - Hacer que dependiendo del estado de la escena se pase a una u otra.
 
-### Parte 3.
+### Parte 3. (4 puntos)
  - Crear una factoria de enemigos usando Supplier, la creación de los enemigos se hara a partir de un probabilidad pasada al nivel por ejempo [0,2 0,6 1], y se tiene 3 enemigos pequeños, medianos y grandes, los pequeños aparecen con probabildiad 0,2, los medianos con 0,4 (0,6-0,2) y los grandes con 0,4 (1-0,6)
  - Establecer diferentes tipos de balas (normal, fuego, laser)... al inicio de cada nivel se tendrá que asignar a cada enemigo el tipo de bala que dispara (Supplier en la clase Bullet y pasar constructor).
  - Se desea que cada enemigo tenga diferentes movimientos, se define una factoria de movimientos y al crear el enemigo se define que movimiento tendrá (lineal, diagonal, kamikaze...)
 
-
+### Parte 4. (2 puntos)
+Extras referidos a colecciones, interfaces funcionales o streams, por ejemplo número de balas del Figther o poder cambiar de arma en el Figther dependiendo de una tecla o al obtener un PowerUP.
 ## Ejemplo iniciar.
 
 En este ejemplo se crea el avión para el niveleste avión llamado Fighter hereda de SpriteMove e implementa las interfaces IKeyListener, IWarnClock
+```Java
+public class Fighter extends SpriteMove implements IKeyListener, IWarnClock {
 
+    private boolean[] keys_presed;
+    private Image img;
+    //path para la imagen
+    private static String pathurl="avion.png";
+    //para la animación
+    private int original_height;
+    /**
+     * 
+     * @param inc incremento del movimiento
+     * @param s tamaño del avión
+     * @param p coordenadas iniciales
+     * @param board rectangulo con las dimensiones del juego para no salirse
+     */
+    public Fighter(int inc, Size s, Coordenada p, Rectangle board) {
+        super(inc, s, p, true, true, board);
+        this.keys_presed = new boolean[5];
+        this.img = new Image(getClass().getResourceAsStream("/" + Fighter.pathurl));
+        //cambia al mover arriba y abajo
+        this.original_height=s.getHeight();
+    }
+    /**
+     * acciones al pulsar las teclas
+     * @param code 
+     */
+    @Override
+    public void onKeyPressed(KeyCode code) {
+
+       if (code == KeyCode.RIGHT) {
+            this.keys_presed[0] = true;
+        }
+        if (code == KeyCode.LEFT) {
+            this.keys_presed[1] = true;
+        }
+        if (code == KeyCode.UP) {
+            this.keys_presed[2] = true;
+            this.getSize().setHeight(40);
+        }
+        if (code == KeyCode.DOWN) {
+            this.keys_presed[3] = true;
+            this.getSize().setHeight(40);
+        }
+
+    }
+    /**
+     * acciones al soltar el teclado
+     * @param code 
+     */
+    @Override
+    public void onKeyReleased(KeyCode code) {
+       
+        if (code == KeyCode.SPACE) {
+         //crear una bala y añadirla
+        }
+        if (code == KeyCode.RIGHT) {
+            this.keys_presed[0] = false;
+        }
+        if (code == KeyCode.LEFT) {
+            this.keys_presed[1] = false;
+        }
+        if (code == KeyCode.UP) {
+            this.keys_presed[2] = false;
+            this.getSize().setHeight(original_height);
+        }
+        if (code == KeyCode.DOWN) {
+            this.keys_presed[3] = false;
+            this.getSize().setHeight(original_height);
+        }
+    }
+    /**
+     * dibujar, es algo más complejo al moverse las alas
+     * @param gc 
+     */
+    @Override
+    public void draw(GraphicsContext gc) {
+        if (keys_presed[2]) {
+            gc.drawImage(img, 163, 7, this.getSize().getWidth() / 2, this.getSize().getHeight() / 2,
+                    this.getPosicion().getX(), this.getPosicion().getY(),
+                    this.getSize().getWidth(), this.getSize().getHeight());
+        } else {
+            if (keys_presed[3]) {
+                gc.drawImage(img, 54, 7, this.getSize().getWidth() / 2, this.getSize().getHeight() / 2,
+                        this.getPosicion().getX(), this.getPosicion().getY(),
+                        this.getSize().getWidth(), this.getSize().getHeight());
+            } else {
+                gc.drawImage(img, 105, 8, this.getSize().getWidth() / 2, this.getSize().getHeight() / 2,
+                        this.getPosicion().getX(), this.getPosicion().getY(),
+                        this.getSize().getWidth(), this.getSize().getHeight());
+            }
+        } 
+    }
+    //movimiento del avión
+    private void move() {
+
+        if (this.keys_presed[0]) {
+            this.move(IMove.Direction.RIGHT);
+        }
+        if (this.keys_presed[1]) {
+            this.move(IMove.Direction.LEFT);
+        }
+        if (this.keys_presed[2]) {
+            this.move(IMove.Direction.UP);
+        }
+        if (this.keys_presed[3]) {
+            this.move(IMove.Direction.DOWN);
+        }
+    }
+    /** 
+     * cada vez que se recibe un tictac se mueve, faltan las balas del fighter
+     */
+    @Override
+    public void TicTac() {
+        this.move();
+       //mover las balas 
+    }  
+}
+```
+
+Además se modifican diferentes métodos del nivel, como definir un atributo Figther e instancarlo en el constructor y llamar a Tittac,OnKeyPressed,OnKeyReleased para informar de las pulsaciones y en draw para que llame a pintar el Fighter:
+Atributo Fighter en el nivel
+
+```Java
+ private Fighter fighter;
+ ```
+ 
+ Creación del Fighter en el constructor
+ 
+ ```Java
+ //crear el avion
+this.fighter = new Fighter(
+                3,
+                new Size(74, 26),
+                new Coordenada(20, s.getHeight() / 2),
+                new Rectangle(new Coordenada(0, 0), new Coordenada(s.getWidth(), s.getHeight())));
+
+ ```
+ 
+ Para pasar el ciclo de reloj a los hijos 
+
+```Java
+@Override
+    public void TicTac() {
+        if (this.getEstado() == Estado.RUNNING) {
+            //llamar a tictac de los hijos
+            this.TicTacChildrens();
+            //posicion en la que termina
+            if (this.position < this.fin) {
+                this.position += this.speed;
+            } else {
+                this.EndLevel();
+            }
+        }
+    }
+    private void TicTacChildrens() {
+        //pintar el fondo
+        this.background.TicTac();
+        this.fighter.TicTac();
+    }
+ ```   
+ Pintar 
+ 
+ 
+```Java
+    @Override
+    public void draw(GraphicsContext gc) {
+
+        this.background.paint(gc);
+        this.fighter.draw(gc);
+
+        if (this.estado == Estado.PRE_STARTED) {
+            gc.setFill(Color.BROWN);
+            gc.setStroke(Color.WHITE);
+            gc.strokeText(Level.msg[0], 100, 200);
+            gc.fillText(Level.msg[0], 100, 200);
+
+        } 
+    }
+ ```
