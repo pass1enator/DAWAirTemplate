@@ -1,6 +1,8 @@
 # Colecciones en Java
 
-En esta práctica se trabaja con las colecciones, el uso de generalización y la programación funcional
+En esta práctica se trabaja con las colecciones, el uso de generalización y la programación funcional.
+
+![image](https://github.com/pass1enator/DAWAirTemplate/blob/master/captura.png?raw=true)
    
 ## Enunciado
 
