@@ -245,4 +245,7 @@ Implementar lo necesario para que se produzcan colisiones entre las balas del av
  - Se desea que cada enemigo tenga diferentes movimientos, se define una factoria de movimientos y al crear el enemigo se define que movimiento tendrá (lineal, diagonal, kamikaze...)
 
 
+## Ejemplo iniciar.
+
+En este ejemplo se crea el avión para el niveleste avión llamado Fighter hereda de SpriteMove e implementa las interfaces IKeyListener, IWarnClock
 
