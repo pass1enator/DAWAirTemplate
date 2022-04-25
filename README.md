@@ -9,7 +9,7 @@ En esta práctica se trabaja con las colecciones, el uso de generalización y la
 Se tiene la estructura básica del típico juego de aviones de los 80 y 90, nos han encargado terminar el mismo.
 Las características que ha de soportar el juego son:
  - Se tiene que poder tener un conjunto de escenas con la introducción, una demo, el juego, mejores jugadores... para ello se ha definido la interfaz abstracta IScene implementada por AbstractScene y de la que heredarán el resto de escenas, se facilita la escena del juego GameStage. 
- - En la escena GameStage se han de definir niveles, y a medida que se pase el nivel a de comenzar el siguiente, se facilita la clase Level en el paquete modelo.
+ - En la escena GameStage se han de definir niveles, y a medida que se pase el nivel ha de comenzar el siguiente, se facilita la clase Level en el paquete modelo.
  - En cada nivel se tendrá un avión y este a su vez un conjunto de balas, además irán apareciendo diferentes tipos de enemigos de forma aleatoria en función de una probabilidad, de igual forma los enemigos disparán de forma aleatoria a partir de una probabilidad. Se ha definido una jerarquía de clases e interfaces para implementar el avión, las balas y los enemigos, por ejemplo Sprite que es el elemento básico e implementa la interfaz IDragable y SpriteMove que hereda de Sprite y además implementa IMove para poder moverse  
  - Se tiene la clase player que representa el jugador con las vidas y la puntuación, que se deberá dibujar.
 ## Interfaces.
